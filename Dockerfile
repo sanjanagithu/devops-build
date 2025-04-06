@@ -1,13 +1,14 @@
-# Stage 1 - Build
-FROM node:16-alpine as build
-
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
-
-# Stage 2 - Serve using nginx
+# Use official Nginx image
 FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
+
+# Remove default nginx page
+RUN rm -rf /usr/share/nginx/html/*
+
+# Copy your build files into Nginx's web root
+COPY build/ /usr/share/nginx/html/
+
+# Expose port 80
 EXPOSE 80
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
