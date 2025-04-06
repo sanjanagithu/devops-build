@@ -12,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("sanjanadockerhub/dev:dev")
+                    docker.build("sanjanadockerhub/dev:latest")
                 }
             }
         }
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', '3d9acecb-ef2e-4f9b-97cf-b6ee4583c685') {
-                        docker.image("sanjanadockerhub/dev:dev").push()
+                        docker.image("sanjanadockerhub/dev:latest").push()
                     }
                 }
             }
