@@ -8,13 +8,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/sanjanagithu/devops-build.git'
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$BRANCH_NAME .'
+                sh 'docker build -t $IMAGE_NAME:dev .'
             }
         }
 
@@ -29,10 +29,10 @@ pipeline {
                 script {
                     sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
                     if (env.BRANCH_NAME == 'dev') {
-                        sh "docker tag $IMAGE_NAME:$BRANCH_NAME $IMAGE_NAME-dev:latest"
+                        sh "docker tag $IMAGE_NAME:dev $IMAGE_NAME-dev:latest"
                         sh "docker push $IMAGE_NAME-dev:latest"
                     } else if (env.BRANCH_NAME == 'master') {
-                        sh "docker tag $IMAGE_NAME:$BRANCH_NAME $IMAGE_NAME-prod:latest"
+                        sh "docker tag $IMAGE_NAME:prod $IMAGE_NAME-prod:latest"
                         sh "docker push $IMAGE_NAME-prod:latest"
                     }
                 }
